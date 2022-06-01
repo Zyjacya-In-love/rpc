@@ -32,7 +32,7 @@ public class RpcClientProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 建造者模式
         RpcRequest rpcRequest = RpcRequest.builder()
-                .interfaceName(method.getDeclaringClass().getName())
+                .interfaceName(method.getDeclaringClass().getCanonicalName()) // 更容易理解的全类名
                 .methodName(method.getName())
                 .paramTypes(method.getParameterTypes())
                 .args(args)

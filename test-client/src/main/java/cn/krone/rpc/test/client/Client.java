@@ -1,6 +1,7 @@
 package cn.krone.rpc.test.client;
 
 import cn.krone.rpc.api.AddService;
+import cn.krone.rpc.api.MulService;
 import cn.krone.rpc.consumer.RpcClientProxy;
 
 /**
@@ -11,7 +12,9 @@ public class Client {
     public static void main(String[] args) {
         RpcClientProxy rpcClientProxy = new RpcClientProxy("127.0.0.1", 9000);
         AddService addService = rpcClientProxy.getProxy(AddService.class);
+        MulService mulService = rpcClientProxy.getProxy(MulService.class);
         int addRes = addService.add(1, 2);
+//        int mulRes = mulService.multiply(1, 2);
         System.out.println("addRes : " + addRes);
     }
 }

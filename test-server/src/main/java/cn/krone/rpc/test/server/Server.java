@@ -2,6 +2,8 @@ package cn.krone.rpc.test.server;
 
 import cn.krone.rpc.api.AddService;
 import cn.krone.rpc.provider.RpcServer;
+import cn.krone.rpc.provider.ServiceProvider;
+import cn.krone.rpc.provider.ServiceProviderImpl;
 
 /**
  * @author xzq
@@ -9,8 +11,10 @@ import cn.krone.rpc.provider.RpcServer;
  */
 public class Server {
     public static void main(String[] args) {
-        RpcServer rpcServer = new RpcServer();
         AddService addService = new AddServiceImpl();
-        rpcServer.start(addService, 9000);
+        ServiceProvider serviceProvider = new ServiceProviderImpl();
+        serviceProvider.register(addService);
+        RpcServer rpcServer = new RpcServer(serviceProvider);
+        rpcServer.start(9000);
     }
 }
