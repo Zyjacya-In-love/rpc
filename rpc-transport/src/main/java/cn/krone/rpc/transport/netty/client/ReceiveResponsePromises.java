@@ -1,4 +1,4 @@
-package cn.krone.rpc.remoting.netty.client;
+package cn.krone.rpc.transport.netty.client;
 
 import cn.krone.rpc.common.exchange.RpcResponse;
 import io.netty.util.concurrent.Promise;

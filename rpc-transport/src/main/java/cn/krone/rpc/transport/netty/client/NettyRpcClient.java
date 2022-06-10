@@ -1,11 +1,10 @@
-package cn.krone.rpc.remoting.netty.client;
+package cn.krone.rpc.transport.netty.client;
 
 import cn.krone.rpc.common.exchange.RpcRequest;
 import cn.krone.rpc.common.exchange.RpcResponse;
-import cn.krone.rpc.remoting.netty.protocol.ProtocolFrameDecoder;
-import cn.krone.rpc.remoting.netty.protocol.RpcMessageCodec;
-import cn.krone.rpc.common.utils.SequenceIdGenerator;
-import cn.krone.rpc.remoting.RpcClient;
+import cn.krone.rpc.transport.netty.protocol.ProtocolFrameDecoder;
+import cn.krone.rpc.transport.netty.protocol.RpcMessageCodec;
+import cn.krone.rpc.transport.RpcClient;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;

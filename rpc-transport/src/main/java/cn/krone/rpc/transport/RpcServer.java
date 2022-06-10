@@ -1,4 +1,4 @@
-package cn.krone.rpc.remoting;
+package cn.krone.rpc.transport;
 
 /**
  * rpc 网络通信 Server 端通用接口，用于启动服务端以提供服务

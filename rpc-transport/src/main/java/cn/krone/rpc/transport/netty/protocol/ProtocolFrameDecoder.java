@@ -1,4 +1,4 @@
-package cn.krone.rpc.remoting.netty.protocol;
+package cn.krone.rpc.transport.netty.protocol;
 
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
@@ -10,7 +10,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 public class ProtocolFrameDecoder extends LengthFieldBasedFrameDecoder {
 
     public ProtocolFrameDecoder() {
-        this(1024, 8, 4, 0, 0);
+//        this(1024, 8, 4, 0, 0);
+        this(ProtocolConstants.MAX_FRAME_LENGTH, ProtocolConstants.LENGTH_FIELD_OFFSET, ProtocolConstants.LENGTH_FIELD_LENGTH, ProtocolConstants.LENGTH_ADJUSTMENT, ProtocolConstants.INITIAL_BYTES_TO_STRIP);
     }
 
     public ProtocolFrameDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip) {
