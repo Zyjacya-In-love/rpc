@@ -2,10 +2,10 @@ package cn.krone.rpc.test.server;
 
 import cn.krone.rpc.api.AddService;
 import cn.krone.rpc.common.factory.SingletonFactory;
-import cn.krone.rpc.remoting.RpcServer;
+import cn.krone.rpc.transport.RpcServer;
 import cn.krone.rpc.provider.ServiceProvider;
 import cn.krone.rpc.provider.ServiceProviderImpl;
-import cn.krone.rpc.remoting.netty.server.NettyRpcServer;
+import cn.krone.rpc.transport.netty.server.NettyRpcServer;
 
 /**
  * @author xzq

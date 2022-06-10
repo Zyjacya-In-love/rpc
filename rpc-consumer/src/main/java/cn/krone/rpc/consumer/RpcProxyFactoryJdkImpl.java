@@ -2,10 +2,10 @@ package cn.krone.rpc.consumer;
 
 import cn.krone.rpc.common.exchange.RpcRequest;
 import cn.krone.rpc.common.exchange.RpcResponse;
-import cn.krone.rpc.common.factory.SingletonFactory;
+import cn.krone.rpc.common.extension.ExtensionLoader;
 import cn.krone.rpc.common.utils.SequenceIdGenerator;
-import cn.krone.rpc.remoting.RpcClient;
-import cn.krone.rpc.remoting.netty.client.NettyRpcClient;
+import cn.krone.rpc.consumer.config.Config;
+import cn.krone.rpc.transport.RpcClient;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -22,7 +22,8 @@ public class RpcProxyFactoryJdkImpl implements RpcProxyFactory, InvocationHandle
 
     private String host;
     private int port;
-    private final RpcClient rpcClient = SingletonFactory.getInstance(NettyRpcClient.class);
+//    private final RpcClient rpcClient = SingletonFactory.getInstance(NettyRpcClient.class);
+    private final RpcClient rpcClient = ExtensionLoader.getExtensionLoader(RpcClient.class).getExtension(Config.getRpcClientTransport());
 
     public RpcProxyFactoryJdkImpl(String host, int port) {
         this.host = host;
@@ -41,6 +42,10 @@ public class RpcProxyFactoryJdkImpl implements RpcProxyFactory, InvocationHandle
                 .build();
         int sequenceId = SequenceIdGenerator.nextId();
         rpcRequest.setSequenceId(sequenceId);
+//        rpcRequest.setSerializationAlgorithm(SerializationAlgorithmEnum.JDK.getCode());
+        rpcRequest.setSerializationAlgorithm(Config.getSerializationAlgorithmCode());
+        rpcRequest.setCompressionAlgorithm((byte)0xff);
+
         // 2. 拆分逻辑，剩下的 交给 网络通信模块 去发送 去拿到结果
         RpcResponse rpcResponse = rpcClient.sendRequestAndGetResponse(rpcRequest);
         return rpcResponse.getData();

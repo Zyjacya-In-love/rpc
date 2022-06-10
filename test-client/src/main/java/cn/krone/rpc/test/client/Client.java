@@ -11,7 +11,7 @@ import cn.krone.rpc.consumer.RpcProxyFactoryJdkImpl;
  */
 public class Client {
     public static void main(String[] args) {
-        RpcProxyFactoryJdkImpl rpcClientProxy = new RpcProxyFactoryJdkImpl("127.0.0.1", 9000);
+        RpcProxyFactory rpcClientProxy = new RpcProxyFactoryJdkImpl("127.0.0.1", 9000);
         AddService addService = rpcClientProxy.getProxy(AddService.class);
 ////        MulService mulService = rpcClientProxy.getProxy(MulService.class);
         int addRes = addService.add(1, 2);

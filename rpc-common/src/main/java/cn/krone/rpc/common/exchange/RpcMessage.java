@@ -26,9 +26,13 @@ public abstract class RpcMessage implements Serializable {
 
     private int sequenceId;
 
-    private int messageType;
+    private byte messageType;
 
-    public abstract int getMessageType();
+    private byte serializationAlgorithm;
+
+    private byte compressionAlgorithm;
+
+    public abstract byte getMessageType();
 
     /**
      * 请求类型 byte 值

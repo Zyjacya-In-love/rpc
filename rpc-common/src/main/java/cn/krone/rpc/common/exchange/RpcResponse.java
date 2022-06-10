@@ -38,7 +38,7 @@ public class RpcResponse extends RpcMessage { // 因为要网络传输实现 Ser
     }
 
     @Override
-    public int getMessageType() {
+    public byte getMessageType() {
         return RPC_MESSAGE_TYPE_RESPONSE;
     }
 

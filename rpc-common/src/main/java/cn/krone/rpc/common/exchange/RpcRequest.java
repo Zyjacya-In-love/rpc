@@ -28,7 +28,7 @@ public class RpcRequest extends RpcMessage { // 因为要网络传输实现 Seri
     private Object[] args;
 
     @Override
-    public int getMessageType() {
+    public byte getMessageType() {
         return RPC_MESSAGE_TYPE_REQUEST;
     }
 }

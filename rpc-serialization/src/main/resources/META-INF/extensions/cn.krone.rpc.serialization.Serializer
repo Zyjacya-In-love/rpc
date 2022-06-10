@@ -1,0 +1,4 @@
+jdk=cn.krone.rpc.serialization.JdkSerializer
+json=cn.krone.rpc.serialization.JsonSerializer
+kryo=cn.krone.rpc.serialization.KryoSerializer
+protostuff=cn.krone.rpc.serialization.ProtostuffSerializer
