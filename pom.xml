@@ -17,6 +17,7 @@
         <module>test-client</module>
         <module>rpc-transport</module>
         <module>rpc-serialization</module>
+        <module>rpc-registry</module>
     </modules>
 
     <properties>
@@ -67,5 +68,16 @@
             <version>1.7.2</version>
         </dependency>
 
+<!--        zookeeper curator -->
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>4.2.0</version>
+        </dependency>
     </dependencies>
 </project>

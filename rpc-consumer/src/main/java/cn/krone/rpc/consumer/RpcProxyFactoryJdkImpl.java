@@ -5,6 +5,7 @@ import cn.krone.rpc.common.exchange.RpcResponse;
 import cn.krone.rpc.common.extension.ExtensionLoader;
 import cn.krone.rpc.common.utils.SequenceIdGenerator;
 import cn.krone.rpc.consumer.config.Config;
+import cn.krone.rpc.registry.ServiceRegistry;
 import cn.krone.rpc.transport.RpcClient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.InetSocketAddress;
 
 /**
  * @author xzq
@@ -20,22 +22,23 @@ import java.lang.reflect.Proxy;
 @Slf4j
 public class RpcProxyFactoryJdkImpl implements RpcProxyFactory, InvocationHandler{
 
-    private String host;
-    private int port;
+//    private String host;
+//    private int port;
 //    private final RpcClient rpcClient = SingletonFactory.getInstance(NettyRpcClient.class);
     private final RpcClient rpcClient = ExtensionLoader.getExtensionLoader(RpcClient.class).getExtension(Config.getRpcClientTransport());
 
-    public RpcProxyFactoryJdkImpl(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
+//    public RpcProxyFactoryJdkImpl(String host, int port) {
+//        this.host = host;
+//        this.port = port;
+//    }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         // 1. 将方法调用转换为 消息对象
         // 建造者模式
+        String serviceInterfaceName = method.getDeclaringClass().getCanonicalName();
         RpcRequest rpcRequest = RpcRequest.builder()
-                .interfaceName(method.getDeclaringClass().getCanonicalName()) // 更容易理解的全类名
+                .interfaceName(serviceInterfaceName) // 更容易理解的全类名
                 .methodName(method.getName())
                 .paramTypes(method.getParameterTypes())
                 .args(args)
@@ -46,8 +49,15 @@ public class RpcProxyFactoryJdkImpl implements RpcProxyFactory, InvocationHandle
         rpcRequest.setSerializationAlgorithm(Config.getSerializationAlgorithmCode());
         rpcRequest.setCompressionAlgorithm((byte)0xff);
 
+        // 从 注册中心 得到 服务地址
+        String providerRegistryName = cn.krone.rpc.provider.config.Config.getProviderRegistry();
+        ServiceRegistry serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class)
+                .getExtension(providerRegistryName);
+        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(serviceInterfaceName);
+        log.debug("{} address : {}", serviceInterfaceName, inetSocketAddress);
+
         // 2. 拆分逻辑，剩下的 交给 网络通信模块 去发送 去拿到结果
-        RpcResponse rpcResponse = rpcClient.sendRequestAndGetResponse(rpcRequest);
+        RpcResponse rpcResponse = rpcClient.sendRequestAndGetResponse(rpcRequest, inetSocketAddress);
         return rpcResponse.getData();
     }
 

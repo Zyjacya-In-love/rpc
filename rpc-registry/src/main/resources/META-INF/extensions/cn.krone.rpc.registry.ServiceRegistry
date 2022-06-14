@@ -1,0 +1,1 @@
+zookeeper=cn.krone.rpc.registry.zookeeper.ZkServiceRegistryImpl

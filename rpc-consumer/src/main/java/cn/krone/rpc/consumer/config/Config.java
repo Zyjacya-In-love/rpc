@@ -11,7 +11,7 @@ import cn.krone.rpc.serialization.SerializationAlgorithmEnum;
 public final class Config {
     static Properties properties;
     static {
-        try (InputStream in = Config.class.getResourceAsStream("/application.properties")) {
+        try (InputStream in = Config.class.getResourceAsStream("/consumer.properties")) {
             properties = new Properties();
             properties.load(in);
         } catch (IOException e) {
