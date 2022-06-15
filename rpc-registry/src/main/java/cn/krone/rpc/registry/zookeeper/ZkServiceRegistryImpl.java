@@ -23,19 +23,20 @@ public class ZkServiceRegistryImpl implements ServiceRegistry {
     }
 
     @Override
-    public InetSocketAddress lookupService(String serviceName) {
+    public List<String> lookupService(String serviceName) {
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, serviceName);
         if (serviceUrlList == null || serviceUrlList.isEmpty()) {
             throw new RpcException(RpcErrorEnum.SERVICE_NOT_FOUND);
         }
+        return serviceUrlList;
 //        // load balancing
 //        String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);
-        String targetServiceUrl = serviceUrlList.get(0);
-        log.info("Successfully found the service address:[{}]", targetServiceUrl);
-        String[] socketAddressArray = targetServiceUrl.split(":");
-        String host = socketAddressArray[0];
-        int port = Integer.parseInt(socketAddressArray[1]);
-        return new InetSocketAddress(host, port);
+//        String targetServiceUrl = serviceUrlList.get(0);
+//        log.info("Successfully found the service address:[{}]", targetServiceUrl);
+//        String[] socketAddressArray = targetServiceUrl.split(":");
+//        String host = socketAddressArray[0];
+//        int port = Integer.parseInt(socketAddressArray[1]);
+//        return new InetSocketAddress(host, port);
     }
 }

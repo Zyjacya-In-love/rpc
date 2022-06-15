@@ -18,6 +18,7 @@
         <module>rpc-transport</module>
         <module>rpc-serialization</module>
         <module>rpc-registry</module>
+        <module>rpc-loadbalance</module>
     </modules>
 
     <properties>

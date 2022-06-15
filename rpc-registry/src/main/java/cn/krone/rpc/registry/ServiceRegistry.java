@@ -3,6 +3,7 @@ package cn.krone.rpc.registry;
 import cn.krone.rpc.common.extension.SPI;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 
 /**
  * 通用 服务注册中心 接口，所有注册中心需实现两个方法，
@@ -16,6 +17,6 @@ public interface ServiceRegistry {
 
     void registerService(String serviceName, InetSocketAddress inetSocketAddress);
 
-    InetSocketAddress lookupService(String serviceName);
+    List<String> lookupService(String serviceName);
 
 }

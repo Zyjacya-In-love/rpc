@@ -53,6 +53,7 @@
 1. 网络编程框架（`rpc-consumer/src/main/resources/consumer.properties` 中，`client.transport` 字段可选：netty）
 2. 序列化算法（`rpc-consumer/src/main/resources/consumer.properties` 中，`serialization.algorithm` 字段可选：jdk、json、kryo、protostuff）
 3.  注册中心（`rpc-provider/src/main/resources/provider.properties` 中，`provider.registry` 字段可选：zookeeper）
+4. 负载均衡算法（`rpc-consumer/src/main/resources/consumer.properties` 中，`load.balance` 字段可选：random、roundrobin）
 
 
 
@@ -98,10 +99,10 @@ public class RpcResponse {
 
 ```
 +------------------------------------+---------+---------+---------+---------+------------------------------------+
-|  			Magic Number    		 | version | msg type| ser type| com type|			Data Length               |
-|    			4 bytes              | 1 byte  | 1 byte  | 1 byte  | 1 byte  |             4 bytes                |
+|           Magic Number             | version | msg type| ser type| com type|          Data Length               |
+|             4 bytes                | 1 byte  | 1 byte  | 1 byte  | 1 byte  |             4 bytes                |
 +-----------------------------------------------------------------------------------------------------------------+
-|                          							Data Bytes                                                    |
+|                                                   Data Bytes                                                    |
 |                                               Length: ${Data Length}                                            |
 +-----------------------------------------------------------------------------------------------------------------+
 ```
@@ -149,7 +150,7 @@ public class RpcResponse {
 - [x] 可配置多种序列化（至少三种）算法（JDK、JSON、Kryo克里奥、protostuff、Hessian）
 - [x] 客户端 Channel 复用
 - [x] 可配置注册中心（暂只有 zookeeper）
-- [ ] 可配置负载均衡策略（至少两种）（Random、一致性哈希）
+- [ ] 可配置负载均衡策略（至少两种）（Random、轮询、一致性哈希）
 - [ ] 可配置压缩算法（有时间暂定一种）
 - [ ] +心跳机制，避免重连
 - [ ] 容错
@@ -161,7 +162,6 @@ public class RpcResponse {
 ## 鸣谢（参考教程）
 
 1. [JavaGuide：Github：guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework)
-2. [JavaGuide：语雀：《从零开始手把手教你实现一个简单的RPC框架》](https://www.yuque.com/books/share/b7a2512c-6f7a-4afe-9d7e-5936b4c4cab0)
 3. [CSDN：何人听我楚狂声：一起写个Dubbo](https://blog.csdn.net/qq_40856284/category_10138756.html)
 4. [CSDN：PANDA：手把手实现RPC框架--简易版Dubbo构造](https://blog.csdn.net/qq_38685503/category_10794078.html)
 5. [Bilibili：黑马Netty](https://www.bilibili.com/video/BV1py4y1E7oA?p=107&spm_id_from=pageDriver)

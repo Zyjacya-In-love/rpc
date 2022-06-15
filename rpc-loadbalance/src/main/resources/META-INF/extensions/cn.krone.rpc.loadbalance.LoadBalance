@@ -1,0 +1,2 @@
+random=cn.krone.rpc.loadbalance.RandomLoadBalance
+roundrobin=cn.krone.rpc.loadbalance.RoundRobinLoadBalance

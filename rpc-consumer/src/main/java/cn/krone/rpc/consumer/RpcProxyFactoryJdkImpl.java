@@ -5,6 +5,7 @@ import cn.krone.rpc.common.exchange.RpcResponse;
 import cn.krone.rpc.common.extension.ExtensionLoader;
 import cn.krone.rpc.common.utils.SequenceIdGenerator;
 import cn.krone.rpc.consumer.config.Config;
+import cn.krone.rpc.loadbalance.LoadBalance;
 import cn.krone.rpc.registry.ServiceRegistry;
 import cn.krone.rpc.transport.RpcClient;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
+import java.util.List;
 
 /**
  * @author xzq
@@ -53,7 +55,12 @@ public class RpcProxyFactoryJdkImpl implements RpcProxyFactory, InvocationHandle
         String providerRegistryName = cn.krone.rpc.provider.config.Config.getProviderRegistry();
         ServiceRegistry serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class)
                 .getExtension(providerRegistryName);
-        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(serviceInterfaceName);
+        List<String> serviceUrlList = serviceRegistry.lookupService(serviceInterfaceName);
+        // load balancing
+        String loadBalanceAlgorithmName = Config.getLoadBalanceAlgorithmName();
+        LoadBalance loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class)
+                .getExtension(loadBalanceAlgorithmName);
+        InetSocketAddress inetSocketAddress = loadBalance.select(serviceUrlList);
         log.debug("{} address : {}", serviceInterfaceName, inetSocketAddress);
 
         // 2. 拆分逻辑，剩下的 交给 网络通信模块 去发送 去拿到结果

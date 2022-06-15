@@ -34,4 +34,12 @@ public final class Config {
             return name;
         }
     }
+    public static String getLoadBalanceAlgorithmName() {
+        String name = properties.getProperty("load.balance");
+        if(StringUtil.isBlank(name)) {
+            return "random";
+        } else {
+            return name;
+        }
+    }
 }
