@@ -44,6 +44,67 @@
 
 
 
+
+
+## 快速开始
+
+### 依赖版本，详见 pom.xml
+
+Java：1.8.0_291
+
+zookeeper：apache-zookeeper-3.5.10、curator 4.2.0
+
+netty：4.1.39.Final
+
+序列化：jackson：2.11.0、kryo 4.0.2、protostuff 1.7.2
+
+其他：lombok 1.18.24、logback 1.2.3
+
+
+
+### 远程调用样例代码：
+
+服务提供端
+
+```java
+public class Server {
+    public static void main(String[] args) {
+        String host = null;
+        try {
+            host = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        int port = 9000;
+        AddService addService = new AddServiceImpl();
+        ServiceProvider serviceProvider = SingletonFactory.getInstance(
+                                                                        ServiceProviderImpl.class,
+                                                                        new Class[]{String.class, int.class},
+                                                                        new Object[]{host, port});
+        serviceProvider.register(addService);
+        RpcServer rpcServer = new NettyRpcServer();
+        rpcServer.start(port);
+    }
+}
+```
+
+服务消费端
+
+```java
+public class Client {
+    public static void main(String[] args) {
+        RpcProxyFactory rpcClientProxy = new RpcProxyFactoryJdkImpl();
+        AddService addService = rpcClientProxy.getProxy(AddService.class);
+        int addRes = addService.add(1, 2);
+        int addRes2 = addService.add(2, 2);
+        System.out.println("addRes : " + addRes);
+        System.out.println("addRes2 : " + addRes2);
+    }
+}
+```
+
+
+
 ## SPI
 
 通过 SPI，几乎所有组件均可使用配置替换，并且扩展方便。
@@ -157,7 +218,8 @@ public class RpcResponse {
 - [ ] +心跳机制，避免重连
 - [ ] 容错
 - [ ] spring 基于注解的自动服务注册
-- [ ] 一个接口有多个实现类
+
+  
 
 
 
