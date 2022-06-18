@@ -62,6 +62,26 @@ public final class CuratorUtils {
     }
 
     /**
+     * 创建临时节点，Curator 断开自动删除
+     * @param zkClient
+     * @param path
+     */
+    public static void createEphemeralNode(CuratorFramework zkClient, String path) {
+        try {
+            if (REGISTERED_PATH_SET.contains(path) || zkClient.checkExists().forPath(path) != null) {
+                log.info("The node already exists. The node is:[{}]", path);
+            } else {
+                //eg: /rpc/cn.krone.rpc.test.server.AddServiceImpl/127.0.0.1:9000
+                zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path);
+                log.info("The node was created successfully. The node is:[{}]", path);
+            }
+            REGISTERED_PATH_SET.add(path);
+        } catch (Exception e) {
+            log.error("create persistent node for path [{}] fail", path);
+        }
+    }
+
+    /**
      * Gets the children under a node
      *
      * @param rpcServiceName rpc service name eg:github.javaguide.HelloServicetest2version1
