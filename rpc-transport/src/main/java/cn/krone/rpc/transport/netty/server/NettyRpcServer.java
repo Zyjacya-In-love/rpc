@@ -12,6 +12,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -28,6 +29,9 @@ public class NettyRpcServer implements RpcServer {
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
         RpcMessageCodec RPC_MESSAGE_CODEC = new RpcMessageCodec();
         NettyRpcRequestHandler RPC_HANDLER = new NettyRpcRequestHandler();
+        DefaultEventExecutorGroup rpcRequestHandlerGroup = new DefaultEventExecutorGroup(
+                Runtime.getRuntime().availableProcessors() * 2
+        );
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.channel(NioServerSocketChannel.class);
@@ -47,7 +51,9 @@ public class NettyRpcServer implements RpcServer {
 //                    log.debug("after LOGGING_HANDLER");
                     ch.pipeline().addLast(RPC_MESSAGE_CODEC);
 //                    log.debug("after RPC_MESSAGE_CODEC");
-                    ch.pipeline().addLast(RPC_HANDLER);
+                    // 使用 group 执行 RPC_HANDLER 的处理，不再使用 nio 线程执行 Handler，
+                    // 尽量将耗时的业务逻辑处理放入单独的业务线程池中处理，避免影响其他连接的IO读写，从而近一步影响整个服务程序的IO吞吐。
+                    ch.pipeline().addLast(rpcRequestHandlerGroup, RPC_HANDLER);
 //                    log.debug("initChannel finish");
                 }
             });
@@ -58,6 +64,7 @@ public class NettyRpcServer implements RpcServer {
         } finally {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
+            rpcRequestHandlerGroup.shutdownGracefully();
         }
     }
 }
